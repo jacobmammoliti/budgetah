@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: budgetah-mcp
+  labels:
+    app: budgetah-mcp
+    group: budgetah
+spec:
+  selector:
+    matchLabels:
+      app: budgetah-mcp
+  template:
+    metadata:
+      labels:
+        app: budgetah-mcp
+    spec:
+      containers:
+        - name: budgetah-mcp
+          image: harbor.sourpatch.internal.coldbrewlabs.ca/library/budgetah-mcp:0.1.0-scratch-rfcurated
+          env:
+            - name: API_BASE_URL
+              value: http://budgetah-backend:8000
+          ports:
+            - containerPort: 8000
+          resources:
+            requests:
+              cpu: 250m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi

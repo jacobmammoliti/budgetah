@@ -1,0 +1,12 @@
+# Generic
+.DS_Store
+
+# Python-specific
+__pycache__
+.pytest_cache
+.ruff_cache
+.venv
+*.db
+
+# Node-specific
+node_modules
