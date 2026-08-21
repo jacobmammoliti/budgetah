@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: dev-budgetah-frontend
+spec:
+  destination:
+    namespace: dev-budgetah
+    server: https://kubernetes.default.svc
+  source:
+    path: frontend/manifests/overlays/development
+    repoURL: https://gitlab.sourpatch.internal.coldbrewlabs.ca/jacob/budgetah.git
+    targetRevision: HEAD
+  sources: []
+  project: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      enabled: true
+    syncOptions:
+      - CreateNamespace=true

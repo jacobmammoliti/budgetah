@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: budgetah-mcp
+spec:
+  selector:
+    app: budgetah-mcp
+  ports:
+    - port: 8000
+      targetPort: 8000

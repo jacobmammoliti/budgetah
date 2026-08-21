@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: budgetah-backend
+  labels:
+    app: budgetah-backend
+    group: budgetah
+spec:
+  selector:
+    matchLabels:
+      app: budgetah-backend
+  template:
+    metadata:
+      labels:
+        app: budgetah-backend
+    spec:
+      containers:
+        - name: budgetah-backend
+          image: harbor.sourpatch.internal.coldbrewlabs.ca/library/budgetah-backend:0.1.0-scratch-rfcurated
+          env:
+            - name: DATABASE_URL
+              value: sqlite+aiosqlite:////data/budget.db
+          ports:
+            - containerPort: 8000
+          resources:
+            requests:
+              cpu: 250m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          volumeMounts:
+            - name: data
+              mountPath: /data
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: budgetah-backend-data

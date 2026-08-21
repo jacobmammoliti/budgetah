@@ -1,0 +1,35 @@
+services:
+  budgetah-backend:
+    image: harbor.sourpatch.internal.coldbrewlabs.ca/library/budgetah-backend:0.2.0-scratch-rfcurated
+    environment:
+      - DATABASE_URL=sqlite+aiosqlite:////data/budget.db
+    volumes:
+      - db-data:/data
+    ports:
+      - 8000:8000
+  budgetah-mcp:
+    image: harbor.sourpatch.internal.coldbrewlabs.ca/library/budgetah-mcp:0.1.0-scratch-rfcurated
+    environment:
+      - API_BASE_URL=http://budgetah-backend:8000/api/v1
+    ports:
+      - 8001:8000 # Host port : container port
+  budgetah-frontend:
+    image: harbor.sourpatch.internal.coldbrewlabs.ca/library/budgetah-frontend:0.2.0-scratch-rfcurated
+    environment:
+        - NEXT_PUBLIC_API_BASE_URL=http://budgetah-backend:8000/api/v1
+    ports:
+      - 3000:3000
+  llama-cpp:
+    image: harbor.sourpatch.internal.coldbrewlabs.ca/library/llama-cpp-sycl:latest
+    # Pulling Gemma 4 E4B model at Q8_0. Q8_0 is the highest-quality quant that fits within my 14 GB of VRAM.
+    # The `-ngl 99` flag tells llama.cpp to attempt to offload all model layers to the GPU.
+    command: -hf ggml-org/gemma-4-e4b-it-GGUF:Q8_0 -ngl 99
+    ports:
+      - 8080:8080
+    devices:
+      - /dev/dri/renderD128:/dev/dri/renderD128
+      - /dev/dri/card0:/dev/dri/card0
+    volumes:
+      - /opt/models:/root/.cache/huggingface
+volumes:
+  db-data:

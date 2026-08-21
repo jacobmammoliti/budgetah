@@ -1,0 +1,10 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: budgetah-mcp
+spec:
+  template:
+    spec:
+      containers:
+        - name: budgetah-mcp
+          image: harbor.sourpatch.internal.coldbrewlabs.ca/library/budgetah-mcp:0.1.0-scratch-rfcurated
